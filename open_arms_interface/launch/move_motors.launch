@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="open_arms_interface" name="move_one_motor" type="move_one_motor.py" output="screen" />
+    <node pkg="open_arms_driver" name="degtorev_relay" type="degtorev_relay.py" output="screen" />
+    <node pkg="rosserial_python" type="serial_node.py" name="serial_node" output="screen">
+        <param name="port" value="/dev/ttyACM0" />
+        <param name="baud" value="57600" />
+    </node>
+</launch>

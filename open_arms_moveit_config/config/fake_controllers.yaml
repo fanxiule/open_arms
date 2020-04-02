@@ -1,0 +1,10 @@
+controller_list:
+  - name: fake_open_arms_controller
+    joints:
+      - open_arms_joint1
+      - open_arms_joint2
+      - open_arms_joint3
+      - open_arms_joint4
+      - open_arms_joint5
+      - open_arms_joint6
+      - open_arms_joint7

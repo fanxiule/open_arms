@@ -1,0 +1,187 @@
+<?xml version="1.0" ?>
+
+<robot name="open_arms" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:property name="robot_id" value="open_arms" />
+    <xacro:property name="description_pkg" value="open_arms_description" />
+
+    <!-- color definition -->
+    <material name="laser_cut">
+        <color rgba="0.855 0.647 0.125 1" />
+    </material>
+    <material name="motor">
+        <color rgba="0.663 0.663 0.663 1.0" />
+    </material>
+
+    <!-- links -->
+    <link name="${robot_id}_base">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/base.STL" />
+            </geometry>
+            <material name="laser_cut" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/base.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="${robot_id}_link1">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/link_1.STL" />
+            </geometry>
+            <material name="laser_cut" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/link_1.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="${robot_id}_link2">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/link_2.STL" />
+            </geometry>
+            <material name="motor" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/link_2.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="${robot_id}_link3">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/link_3.STL" />
+            </geometry>
+            <material name="laser_cut" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/link_3.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="${robot_id}_link4">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/link_4.STL" />
+            </geometry>
+            <material name="motor" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/link_4.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="${robot_id}_link5">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/link_5.STL" />
+            </geometry>
+            <material name="laser_cut" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/link_5.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="${robot_id}_link6">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/link_6.STL" />
+            </geometry>
+            <material name="motor" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/link_6.STL" />
+            </geometry>
+        </collision>
+    </link>
+    <link name="${robot_id}_link7">
+        <visual>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/visual/link_7.STL" />
+            </geometry>
+            <material name="laser_cut" />
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="0 0 0" />
+            <geometry>
+                <mesh filename="package://${description_pkg}/meshes/collision/link_7.STL" />
+            </geometry>
+        </collision>
+    </link>
+
+    <!-- joints -->
+    <joint name="${robot_id}_joint1" type="revolute">
+        <origin rpy="0 0 0" xyz="0 0 0.053975" />
+        <parent link="${robot_id}_base" />
+        <child link="${robot_id}_link1" />
+        <axis xyz="0 0 1" />
+        <limit effort="30" lower="-1.5708" upper="1.5708" velocity="0.2094" />
+    </joint>
+    <joint name="${robot_id}_joint2" type="revolute">
+        <origin rpy="1.5708 0 0" xyz="0 0 0.13705" />
+        <parent link="${robot_id}_link1" />
+        <child link="${robot_id}_link2" />
+        <axis xyz="0 0 1" />
+        <limit effort="30" lower="-1.5358" upper="0" velocity="0.2094" />
+    </joint>
+    <joint name="${robot_id}_joint3" type="revolute">
+        <origin rpy="-1.5708 0 0" xyz="0 0 0" />
+        <parent link="${robot_id}_link2" />
+        <child link="${robot_id}_link3" />
+        <axis xyz="0 0 1" />
+        <limit effort="30" lower="-3.1415" upper="3.1415" velocity="0.2094" />
+    </joint>
+    <joint name="${robot_id}_joint4" type="revolute">
+        <origin rpy="1.5708 0 0" xyz="0.020 0 0.240" />
+        <parent link="${robot_id}_link3" />
+        <child link="${robot_id}_link4" />
+        <axis xyz="0 0 1" />
+        <limit effort="30" lower="-0.6981" upper="1.8325" velocity="0.2094" />
+    </joint>
+    <joint name="${robot_id}_joint5" type="revolute">
+        <origin rpy="1.5708 0 1.5708" xyz="0 0.020 0" />
+        <parent link="${robot_id}_link4" />
+        <child link="${robot_id}_link5" />
+        <axis xyz="0 0 1" />
+        <limit effort="30" lower="-3.1415" upper="3.1415" velocity="0.2094" />
+    </joint>
+    <joint name="${robot_id}_joint6" type="revolute">
+        <origin rpy="-1.5708 0 0" xyz="0 0 0.200" />
+        <parent link="${robot_id}_link5" />
+        <child link="${robot_id}_link6" />
+        <axis xyz="0 0 1" />
+        <limit effort="30" lower="0" upper="3.1415" velocity="0.2094" />
+    </joint>
+    <joint name="${robot_id}_joint7" type="revolute">
+        <origin rpy="0 -1.5708 0" xyz="0 0 0" />
+        <parent link="${robot_id}_link6" />
+        <child link="${robot_id}_link7" />
+        <axis xyz="0 0 1" />
+        <limit effort="30" lower="-3.1415" upper="3.1415" velocity="0.2094" />
+    </joint>
+</robot>

@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: open_arms_description
+    relative_path: urdf/open_arms.urdf.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/open_arms.srdf
+  CONFIG:
+    author_name: Xiule Fan
+    author_email: fanxiule@gmail.com
+    generated_timestamp: 1584380167
