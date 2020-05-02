@@ -8,7 +8,7 @@ The Open Arms Project thrives to develop an open source low-cost educational rob
 
 ## About the Package
 
-This repository is the mega package for the control system of the Open Arms Project. It contains the following sub-packages:
+This repository is the top-level package for the control system of the Open Arms Project. It contains the following sub-packages:
 
 - open_arms_common: contains common values and constants used by other sub-packages
   
@@ -25,6 +25,8 @@ This repository is the mega package for the control system of the Open Arms Proj
 Refer to the README files under each sub-package for more details.
 
 ## Using the Package
+
+All of the packages were developed on a machine with Ubuntu 16.04 and ROS Kinetic.
 
 ## Acknowledgement
 

@@ -12,13 +12,13 @@ private:
     static float step_time;   //actuation time for each step in ms
     static float speed_scale; //scale in terms of the maximum speed, 0.01-1
 
-    unsigned short int stp_num;         //store the step pin number on Arduino
-    unsigned short int dir_num;         //store the direction pin number on Arduino
+    unsigned short int stp_num;    //store the step pin number on Arduino
+    unsigned short int dir_num;    //store the direction pin number on Arduino
     unsigned short int enable_num; //store enable pin number on Arduino
-    unsigned short int total_stp;       //total number of steps per rev
-    float RPM = MAX_RPM;                //RPM of each motor
-    float step_angle;                   //in degrees, angle per step of the motor
-    float time_per_step;                //time required for each step interval
+    unsigned short int total_stp;  //total number of steps per rev
+    float RPM = MAX_RPM;           //RPM of each motor
+    float step_angle;              //in degrees, angle per step of the motor
+    float time_per_step;           //time required for each step interval
 
 public:
     int iteration;       //number of iterations needed to complete one step of motion (1 PWM cycle)

@@ -9,6 +9,7 @@ Stepper::Stepper(unsigned short int stp, unsigned short int dir, float angle)
 { //constructor
     stp_num = stp;
     dir_num = dir;
+    enable_num = -1; // essentially disable the enable pin
     step_angle = angle;
     total_stp = 360 / step_angle;
     setNewIteration();
@@ -200,17 +201,22 @@ void Stepper::moveRev(bool direction, float revolution)
 }
 
 void Stepper::moveMotorStep(int steps)
-{
+{   //move motors for given steps
+    // if steps > 0, move in CCW
+    // if steps < 0, move in CW
     int steps_done = 0;
-    if (steps > steps_done)
+    int steps_needed = abs(steps);
+    if (steps > 0 && steps_done < steps_needed)
     {
         moveStepCCW();
         restStep();
+        steps_done++;
     }
-    else if (steps < steps_done)
+    else if (steps < 0 && steps_done < steps_needed)
     {
         moveStepCW();
         restStep();
+        steps_done++;
     }
 }
 
