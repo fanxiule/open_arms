@@ -1,29 +1,33 @@
 #include <Arduino.h>
-#include "OpenArmsStepper.h"
+#include "open_arms_stepper.h"
 
-short int Stepper::counter = 0;                //initialized number of motors is 0
-float Stepper::step_time = MIN_ACTUATION_TIME; //default actuation time is minimum time
-float Stepper::speed_scale = 1;                //initialized speed scale as 1, i.e. maximum speed allowecd
+unsigned short int Stepper::counter = 0;       //initialized number of motors is 0
+float Stepper::iter_time = MIN_ACTUATION_TIME; //default actuation time is minimum time
+//float Stepper::speed_scale = 1;                //initialized speed scale as 1, i.e. maximum speed allowecd
 
 Stepper::Stepper(unsigned short int stp, unsigned short int dir, float angle)
-{ //constructor
+{ //constructor when motor driver's enable pin is not connected
     stp_num = stp;
     dir_num = dir;
     enable_num = -1; // essentially disable the enable pin
     step_angle = angle;
     total_stp = 360 / step_angle;
+    iter_counter = 0;
+    RPM = MAX_RPM;
     setNewIteration();
     counter++;
     //Serial.println("Motor Initialized");
 }
 
 Stepper::Stepper(unsigned short int stp, unsigned short int dir, unsigned short int enable, float angle)
-{ //constructor
+{ //constructor when motor driver's enable pin is connected
     stp_num = stp;
     dir_num = dir;
     enable_num = enable;
     step_angle = angle;
     total_stp = 360 / step_angle;
+    iter_counter = 0;
+    RPM = MAX_RPM;
     setNewIteration();
     counter++;
     //Serial.println("Motor Initialized");
@@ -60,39 +64,60 @@ Stepper &Stepper::operator=(const Stepper &other)
     return *this;
 }
 
+void Stepper::setNewIteration()
+{ //calculate new iteration numbers needed for each PWM cycle
+    //convert RPM to ms/step
+    time_per_step = 1 / (RPM / 60 / 1000 * total_stp);
+    //Serial.print("Time per step is: "); //
+    //Serial.print(time_per_step); //
+    //Serial.print(" ms \n");      //
+    /***************************/
+    //time_per_step /= speed_scale;
+    if (time_per_step < iter_time)
+    { //check if time needed for each step is lower than the actuation time
+        Serial.println("Time needed per step is too low, the shortest time possible is used");
+        time_per_step = 2 * iter_time; //use the current one
+    }
+    iteration = time_per_step / iter_time;
+}
+
+void Stepper::moveStep()
+{ //move one step
+    digitalWrite(stp_num, HIGH);
+    iter_counter++;
+    delay(iter_time);
+}
+
 short int Stepper::getStepperCount()
 { //get number of motors that have been instantiated
     return counter;
 }
 
-void Stepper::setStepTime(float time)
+unsigned short int Stepper::getIteration()
+{ //get how many iterations needed to complete a PWM cycle
+    return iteration;
+}
+
+unsigned short int Stepper::getIterCounter()
+{ //get current iteration number of the motor
+    return iter_counter;
+}
+
+void Stepper::setIterTime(float time)
 { //set actuation time for each step, time in ms
     if (time <= MIN_ACTUATION_TIME)
     {
-        Serial.println("Actuation time too low"); //
-        time = MIN_ACTUATION_TIME;
+        Serial.println("Requested actuation time too low, minimum actuation time is used");
+        time = MIN_ACTUATION_TIME; //use minimum allowable actuation time
     }
     else
     {
-        step_time = time;
+        iter_time = time;
     }
+    //setNewIteration(); //calculate new iteration numbers
 }
 
-void Stepper::setRPM(float velocity)
-{ //set RPM of the motors
-    if (velocity >= MAX_RPM)
-    {
-        Serial.println("RPM too high"); //
-        RPM = MAX_RPM;
-    }
-    else
-    {
-        RPM = velocity;
-    }
-    setNewIteration();
-}
-
-void Stepper::setScale(float scale)
+/*void Stepper::setScale(float scale)
 { //set scale for maximum speed, allowable range is 0.01-1
     if (scale < 0.01)
     {
@@ -110,21 +135,20 @@ void Stepper::setScale(float scale)
     {
         speed_scale = scale;
     }
-}
+}*/
 
-void Stepper::setNewIteration()
-{                                                      //calculate new iteration numbers needed for each PWM cycle
-    time_per_step = 1 / (RPM / 60 / 1000 * total_stp); //convert RPM to ms/step
-    //Serial.print("Time per step is: "); //
-    Serial.print(time_per_step); //
-    Serial.print(" ms \n");      //
-    time_per_step /= speed_scale;
-    if (time_per_step < step_time)
-    {                                                   //check if time needed for each step is lower than the actuation time
-        Serial.println("Time needed per step too low"); //
-        time_per_step = 2 * step_time;
+void Stepper::setRPM(float velocity)
+{ //set RPM of the motors
+    if (velocity >= MAX_RPM)
+    {
+        Serial.println("Requested RPM too high, maximum RPM is used");
+        RPM = MAX_RPM; //use maximm allowable RPM
     }
-    iteration = time_per_step / step_time;
+    else
+    {
+        RPM = velocity;
+    }
+    setNewIteration();
 }
 
 void Stepper::enableMotor()
@@ -153,18 +177,11 @@ void Stepper::setCW()
     digitalWrite(dir_num, HIGH);
 }
 
-void Stepper::moveStep()
-{ //move one step
-    digitalWrite(stp_num, HIGH);
-    rev_counter++;
-    delay(step_time);
-}
-
 void Stepper::restStep()
 { //rest
     digitalWrite(stp_num, LOW);
-    rev_counter++;
-    delay(step_time);
+    iter_counter++;
+    delay(iter_time);
 }
 
 void Stepper::moveStepCCW()
@@ -179,45 +196,41 @@ void Stepper::moveStepCW()
     moveStep();
 }
 
-void Stepper::moveRev(bool direction, float revolution)
-{ //move in given direction for given revolutions
-    //diretion: true -> CCW, false -> CW
-    if (direction == true)
+void Stepper::moveRev(float revolution)
+{ //move for given revolutions, +ve input -> CCW, -ve input -> CW
+    int steps_needed = total_stp * revolution;
+    moveStep(steps_needed);
+}
+
+void Stepper::moveStep(int steps)
+{ //move motors for given steps
+    // if steps > 0, move in CCW
+    // if steps < 0, move in CW
+    if (steps > 0)
     {
         setCCW();
     }
-    else
+    else if (steps < 0)
     {
         setCW();
     }
-    setNewIteration();
-    int StepNeeded = total_stp * revolution;
-    for (int StepCompleted = 0; StepCompleted < StepNeeded; StepCompleted++)
+    else
+    {
+        return;
+    }
+    int steps_done = 0;
+    int steps_needed = abs(steps);
+    while (steps_done < steps_needed)
     {
         moveStep();
         restStep();
-        delay(25);
+        steps_done++;
     }
 }
 
-void Stepper::moveMotorStep(int steps)
-{   //move motors for given steps
-    // if steps > 0, move in CCW
-    // if steps < 0, move in CW
-    int steps_done = 0;
-    int steps_needed = abs(steps);
-    if (steps > 0 && steps_done < steps_needed)
-    {
-        moveStepCCW();
-        restStep();
-        steps_done++;
-    }
-    else if (steps < 0 && steps_done < steps_needed)
-    {
-        moveStepCW();
-        restStep();
-        steps_done++;
-    }
+void Stepper::resetIterCounter()
+{ // set the iter_counter back to 0
+    iter_counter = 0;
 }
 
 void Stepper::printSummary()

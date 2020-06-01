@@ -1,8 +1,9 @@
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include <open_arms_common.h>
-#include <OpenArmsStepper.h>
+#include <open_arms_stepper.h>
 //#include <OpenArmsFB.h>
 #include <Encoder.h>
+#include <open_arms_joint.h>
 
 Stepper motor(JOINT5_STP, JOINT5_DIR, 1.8);
 Encoder encoder(ENC5_A, ENC5_B);
@@ -25,7 +26,7 @@ void loop()
   motor.setRPM(100);
   while (!done)
   {
-    if (motor.rev_counter == 0 && target_angle > ini_angle)
+    if (motor.getIterCounter() == 0 && target_angle > ini_angle)
     {
       motor.moveStepCW();
       cur_enc_pos = encoder.read();
@@ -44,7 +45,7 @@ void loop()
         done = true;
       }
     }
-    else if (motor.rev_counter == 0 && target_angle < ini_angle)
+    else if (motor.getIterCounter() == 0 && target_angle < ini_angle)
     {
       motor.moveStepCCW();
       cur_enc_pos = encoder.read();
@@ -63,7 +64,7 @@ void loop()
         done = true;
       }
     }
-    else if (motor.rev_counter == 0 && target_angle == ini_angle)
+    else if (motor.getIterCounter() == 0 && target_angle == ini_angle)
     {
       done = true;
     }
@@ -80,9 +81,9 @@ void loop()
       done = true;
       Serial.println("Over torque");
     }
-    if (motor.rev_counter >= motor.iteration)
+    if (motor.getIterCounter() >= motor.getIteration())
     {
-      motor.rev_counter = 0;
+      motor.resetIterCounter();
     }
     delay(1);
   }

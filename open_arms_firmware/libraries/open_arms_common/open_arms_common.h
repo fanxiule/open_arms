@@ -41,8 +41,9 @@
 #define ENC1_A 2
 #define ENC1_B 0
 
-#define GEAR_REDUCTION 26.0
+#define CYCLOIDAL_REDUCTION 26.0
 #define ENC_REDUCTION 4.0
 #define ENC_RESOLUTION 20.0
+#define STEP_ANGLE 1.8
 
 #endif /* OPENARMSCOMMON_H */
