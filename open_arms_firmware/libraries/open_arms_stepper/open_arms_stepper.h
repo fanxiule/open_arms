@@ -24,6 +24,7 @@ private:
 
     void setNewIteration(); //set new iteration based on new actuation time, RPM or scale
 public:
+    Stepper(){};                                                                                       //default constructor
     Stepper(unsigned short int stp, unsigned short int dir, float angle);                            //constructor with arguments to initialize step pin and dir pin numbers
     Stepper(unsigned short int stp, unsigned short int dir, unsigned short int enable, float angle); //constructor with additional enable pin
     ~Stepper();                                                                                      //destructor

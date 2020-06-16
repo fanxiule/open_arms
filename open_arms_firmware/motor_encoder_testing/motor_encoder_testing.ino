@@ -1,9 +1,8 @@
 #define ENCODER_OPTIMIZE_INTERRUPTS
 #include <open_arms_common.h>
 #include <open_arms_stepper.h>
-//#include <OpenArmsFB.h>
 #include <Encoder.h>
-#include <open_arms_joint.h>
+//#include <open_arms_joint.h>
 
 Stepper motor(JOINT5_STP, JOINT5_DIR, 1.8);
 Encoder encoder(ENC5_A, ENC5_B);

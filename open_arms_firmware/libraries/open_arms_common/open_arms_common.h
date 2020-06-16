@@ -1,9 +1,9 @@
 #ifndef OPENARMSCOMMON_H
 #define OPENARMSCOMMON_H
 
-// store arduino pin numbers for connection
+//store arduino pin numbers for connection
 
-// from motor driver to arduino
+//from motor driver to arduino
 #define JOINT7_STP 22
 #define JOINT7_DIR 23
 #define JOINT7_ENB 41
@@ -26,8 +26,8 @@
 #define JOINT1_DIR 35
 #define JOINT1_ENB 53
 
-// from encoder to arduino
-// the pins for ENC#_A are interrupt pins
+//from encoder to arduino
+//the pins for ENC#_A are interrupt pins
 #define ENC6_A 21
 #define ENC6_B 17
 #define ENC5_A 20
@@ -41,6 +41,7 @@
 #define ENC1_A 2
 #define ENC1_B 0
 
+//some constants
 #define CYCLOIDAL_REDUCTION 26.0
 #define ENC_REDUCTION 4.0
 #define ENC_RESOLUTION 20.0
