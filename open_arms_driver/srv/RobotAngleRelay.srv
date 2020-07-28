@@ -1,0 +1,5 @@
+string[] name
+float32[] angle
+---
+bool motion_done
+bool overtorque

@@ -4,6 +4,26 @@
 
 unsigned short int Joint::counter = 0;
 
+static unsigned short int Joint::getJointCount()
+{
+    return counter;
+}
+
+void Joint::disableMotor()
+{
+    pMotor->disableMotor();
+}
+
+void Joint::enableMotor()
+{
+    pMotor->enableMotor();
+}
+
+void Joint::setRPM(float velocity)
+{
+    pMotor->setRPM(velocity);
+}
+
 void Joint::setDirection(float target)
 { //set the direction of rotation of the joint
     target_angle = target;
@@ -98,6 +118,7 @@ void OpenJoint::moveJoint()
     {
         task_completed = true;
     }
+    Serial.println(angle); //
 }
 
 ClosedJoint::ClosedJoint(Stepper &joint_motor, Encoder &joint_encoder, float ini_angle)

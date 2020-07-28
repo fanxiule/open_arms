@@ -1,5 +1,0 @@
-string joint_name
-bool direction
-float64 revolution
----
-string response

@@ -1,18 +1,16 @@
 #include <open_arms_common.h>
-#include <OpenArmsStepper.h>
+#include <open_arms_stepper.h>
 #include <ros.h>
 #include <std_msgs/Int32.h>
 
-Stepper gripper(22, 23, 3, 1.8); //stp, dir, enable, angle //0.25A
-Stepper hand_rot(24, 25, 4, 1.8); //stp, dir, angle
-Stepper hand_piv(26, 27, 5, 1.8);
-Stepper elbow_rot(28, 29, 6, 1.8); //0.75A
-Stepper elbow_piv(30, 31, 7, 1.8); //0.75A
-Stepper base_rot(32, 33, 8, 1.8);
-Stepper base_piv(34, 35, 9, 1.8); //0.35 A
-//Stepper* Motor[7] = {&gripper, &hand_rot, &hand_piv, &elbow_rot, &elbow_piv, &base_rot, &base_piv}; //
+Stepper base_piv(JOINT1_STP, JOINT1_DIR, JOINT1_ENB, STEP_ANGLE); //0.35A
+Stepper base_rot(JOINT2_STP, JOINT2_DIR, JOINT2_ENB, STEP_ANGLE);
+Stepper elbow_piv(JOINT3_STP, JOINT3_DIR, JOINT3_ENB, STEP_ANGLE); //0.75A
+Stepper elbow_rot(JOINT4_STP, JOINT4_DIR, JOINT4_ENB, STEP_ANGLE); //0.75A
+Stepper hand_piv(JOINT5_STP, JOINT5_DIR, JOINT5_ENB, STEP_ANGLE);
+Stepper hand_rot(JOINT6_STP, JOINT6_DIR, JOINT6_ENB, STEP_ANGLE);
+Stepper gripper(JOINT7_STP, JOINT7_DIR, JOINT7_ENB, STEP_ANGLE); //0.25A
 Stepper* Motor[7] = {&base_rot, &base_piv, &elbow_piv, &elbow_rot, &hand_piv, &hand_rot, &gripper};
-int rev_counter[7] = {0, 0, 0, 0, 0, 0, 0};
 bool move = false;
 
 //ros::NodeHandle nh;
@@ -68,7 +66,7 @@ void loop()
   {
     for (unsigned short int i = 0; i < gripper.getStepperCount(); i++)
     {
-      if (Motor[i]->rev_counter == 0)
+      if (Motor[i]->getIterCounter() == 0)
       {
         Motor[i]->moveStepCW();
       }
@@ -77,9 +75,9 @@ void loop()
         Motor[i]->restStep();
       }
 
-      if (Motor[i]->rev_counter >= Motor[i]->iteration)
+      if (Motor[i]->getIterCounter() >= Motor[i]->getIteration())
       {
-        Motor[i]->rev_counter = 0;
+        Motor[i]->resetIterCounter();
       }
     }
      //nh.spinOnce();

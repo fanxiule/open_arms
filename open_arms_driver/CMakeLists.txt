@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
+include_directories(${catkin_INCLUDE_DIRS})
+
 catkin_install_python(PROGRAMS nodes/degtorev_relay.py
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
     USE_SOURCE_PERMISSIONS
@@ -15,11 +17,13 @@ catkin_install_python(PROGRAMS nodes/degtorev_relay.py
 
 add_service_files(
   FILES
-  DegToRev.srv
-  MoveMotorArduino.srv
+  RobotAngleRelay.srv
 )
 
 generate_messages(
   DEPENDENCIES
   std_msgs
 )
+
+add_executable(joint_states_relay src/joint_states_relay.cpp)
+target_link_libraries(joint_states_relay ${catkin_LIBRARIES})

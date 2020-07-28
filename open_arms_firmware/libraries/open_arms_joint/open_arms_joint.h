@@ -13,17 +13,21 @@ protected:
     static unsigned short int counter; //count total number of joints
     Stepper *pMotor;                   //motor of the current joint
     float angle;                       //current angle of the joint
-    float target_angle;                //target angle
+    float target_angle;                //target angle in radians
     bool task_completed;               //flag to show if the motion task_completed
     bool is_CCW;                       //flag to show which diretion to rotate to
 
     Joint();              //default constructor
     virtual ~Joint() = 0; //destructor
 public:
-    void setDirection(float target_angle); //determin direction of rotation
-    bool getCompletionFlag();              //return completion status of the motion
-    virtual bool isOvertorqued() = 0;      //return if the joint is overtorqued, i.e. if collision has occured
-    virtual void moveJoint() = 0;          //move the joint
+    static unsigned short int getJointCount(); //get number of joints instantiated
+    void disableMotor();                       //disable the joint motor
+    void enableMotor();                        //enable the joint motor
+    void setRPM(float velocity);               //set RPM of the motor
+    void setDirection(float target_angle);     //determin direction of rotation, input in radians
+    bool getCompletionFlag();                  //return completion status of the motion
+    virtual bool isOvertorqued() = 0;          //return if the joint is overtorqued, i.e. if collision has occured
+    virtual void moveJoint() = 0;              //move the joint
 };
 
 class OpenJoint : public Joint

@@ -1,6 +1,6 @@
 #include <ros.h>
 #include <open_arms_common.h>
-#include <OpenArmsStepper.h>
+#include <open_arms_stepper.h>
 #include <open_arms_driver/MoveMotorArduino.h>
 
 Stepper joint1(JOINT1_STP, JOINT1_DIR, JOINT1_ENB, 1.8);
